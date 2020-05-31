@@ -29,6 +29,7 @@ public class FallingView extends RelativeLayout {
     private int mWidth;
     private int mHeight;
     private int mRawWidth;
+    private boolean isStart;
 
     public FallingView(Context context) {
         this(context, null);
@@ -73,10 +74,12 @@ public class FallingView extends RelativeLayout {
     @Override
     protected void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
-        for (Flake flake : mFlakes) {
-            flake.draw(canvas, mFlakeBitmap);
+        if (isStart) {
+            for (Flake flake : mFlakes) {
+                flake.draw(canvas, mFlakeBitmap);
+            }
+            getHandler().postDelayed(mRunnable, mDelay);
         }
-        getHandler().postDelayed(mRunnable, mDelay);
     }
 
     private Runnable mRunnable = new Runnable() {
@@ -123,5 +126,15 @@ public class FallingView extends RelativeLayout {
 
     public void setDelay(int delay) {
         this.mDelay = delay;
+    }
+
+    public void start() {
+        this.isStart = true;
+        invalidate();
+    }
+
+    public void stop() {
+        this.isStart = false;
+        invalidate();
     }
 }
